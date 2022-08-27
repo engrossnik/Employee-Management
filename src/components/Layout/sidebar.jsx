@@ -11,7 +11,7 @@ import {
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import logo from '../assets/engross-infotech-logo.png';
+import logo from '../../assets/engross-infotech-logo.png';
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
   { name: 'Team', href: '#', icon: UsersIcon, current: false },
