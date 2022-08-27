@@ -87,7 +87,7 @@ const Sidebar = () => {
                     <div className="flex-shrink-0 flex items-center px-4">
                       <img
                         className="h-8 w-auto"
-                        src={logo}
+                        src={""}
                         alt="Workflow"
                       />
                     </div>
@@ -147,7 +147,7 @@ const Sidebar = () => {
               <div className="flex items-center flex-shrink-0 px-4">
                 <img
                   className="h-12 w-auto"
-                  src={logo}
+                  src={""}
                   alt="Workflow"
                 />
               </div>
