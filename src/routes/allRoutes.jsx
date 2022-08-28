@@ -1,7 +1,7 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
 // Authentication related pages
-import Login from "../pages/Authentication/Login"
+import Register from "../pages/Authentication/Login"
 import Logout from "../pages/Authentication/Logout"
 // Dashboard
 import Dashboard from "../pages/Dashboard/index"
@@ -12,7 +12,7 @@ const userRoutes = [
     { path: "/", exact: true, component: () => <Redirect to="/dashboard" /> },
   ]
   const authRoutes = [
-    { path: "/login", component: Login },
+    { path: "/login", component: Register },
   
   ]
   export { userRoutes, authRoutes }

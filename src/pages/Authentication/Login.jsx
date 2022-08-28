@@ -1,8 +1,44 @@
 // import logo from './assets/engross-infotech-logo.png';
 import React from "react"
+// Redux
+import PropTypes from 'prop-types'
+import { connect } from "react-redux"
 import { withRouter, Link } from "react-router-dom"
+import { registernUser } from "../../store/auth/register/actions"
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-const Login = props => {
+
+const Register = props => {
+
+
+  const validationSchema = yup.object().shape({
+    username: yup.string().required("Please enter user name.").min(3),
+    email: yup.string().email().required("Please enter your email"),
+    password: yup
+      .string()
+      .required("Please enter your password")
+      .matches(/[A-Z]/, 'Must contain one uppercase')
+      .matches(/([a-z])/, 'Must contain one lowercase')
+      .matches(/(\d)/, 'Must contain one number')
+      .matches(/(\W)/, 'Must contain one special character').min(8),
+    confirmPassword: yup
+      .string()
+      .required("Please confirm your password")
+      .when("password", {
+        is: password => (password && password.length > 0 ? true : false),
+        then: yup.string().oneOf([yup.ref("password")], "Password doesn't match")
+      })
+  })
+  const onSubmit = (event) => {
+    props.registernUser(event, props.history);
+  }
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  
   return (
     <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -17,7 +53,23 @@ const Login = props => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit((e, v) => { onSubmit(e) })}>
+
+          <div>
+              <label htmlFor="userName" className="block text-sm font-medium text-gray-700">
+               User Name
+              </label>
+              <div className="mt-1">
+                <input
+                  id="userName"
+                  name="username"
+                  type="text"
+                  {...register('username')}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+                    {errors.username && <p className="text-red-500">{errors.username.message}</p>}
+              </div>
+            </div>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
@@ -28,9 +80,10 @@ const Login = props => {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  required
+                  {...register('email')}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                  {errors.email && <p className="text-red-500">{errors.email.message}</p>}
               </div>
             </div>
 
@@ -43,10 +96,28 @@ const Login = props => {
                   id="password"
                   name="password"
                   type="password"
+                  {...register('password')}
                   autoComplete="current-password"
-                  required
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+              </div>
+            </div>
+            
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+             Confirm Password
+              </label>
+              <div className="mt-1">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  {...register('confirmPassword')}
+                  autoComplete="current-password"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+                 {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
               </div>
             </div>
 
@@ -84,5 +155,19 @@ const Login = props => {
     </div>
   )
 }
-export default withRouter(Login)
+const mapStateToProps = state => {
+  const { error } = state.Register
+  return { error }
+}
+
+export default withRouter(
+  connect(mapStateToProps, { registernUser})(Register)
+)
+
+Register.propTypes = {
+  error: PropTypes.any,
+  history: PropTypes.object,
+  registernUser: PropTypes.func,
+}
+// export default withRouter(Login)
 
